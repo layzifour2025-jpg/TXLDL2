@@ -21,7 +21,7 @@ def bai1_supermarket():
     df['is_weekend'] = df['day_of_week'].isin([5, 6]).astype(int)
     
     plt.figure(figsize=(12, 5))
-    df.resample('ME')['revenue'].sum().plot(title='Tong doanh thu theo thang', marker='o')
+    df.resample('M')['revenue'].sum().plot(title='Tong doanh thu theo thang', marker='o')
     plt.savefig('b1_revenue_monthly.png')
     plt.close()
     
@@ -51,7 +51,7 @@ def bai2_webtraffic():
     df['datetime'] = pd.to_datetime(df['datetime'])
     df.set_index('datetime', inplace=True)
     
-    df = df.resample('h').mean(numeric_only=True)
+    df = df.resample('H').mean(numeric_only=True)
     df['visits'] = df['visits'].interpolate(method='linear')
     
     df['hour'] = df.index.hour
