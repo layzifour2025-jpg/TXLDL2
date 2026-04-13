@@ -12,7 +12,7 @@ def bai1_supermarket():
     df['date'] = pd.to_datetime(df['date'])
     df.set_index('date', inplace=True)
     
-    df['revenue'] = df['revenue'].interpolate(method='linear')
+    df['revenue'] = df['revenue'].interpolate(method='linear').bfill().ffill()
     
     df['year'] = df.index.year
     df['month'] = df.index.month
@@ -21,12 +21,12 @@ def bai1_supermarket():
     df['is_weekend'] = df['day_of_week'].isin([5, 6]).astype(int)
     
     plt.figure(figsize=(12, 5))
-    df.resample('M')['revenue'].sum().plot(title='Tong doanh thu theo thang', marker='o')
+    df.resample('ME')['revenue'].sum().plot(title='Tong doanh thu theo thang', marker='o')
     plt.savefig('b1_revenue_monthly.png')
     plt.close()
     
     plt.figure(figsize=(12, 5))
-    df.resample('W')['revenue'].sum().plot(title='Tong doanh thu theo tuan', marker='o')
+    df.resample('W-MON')['revenue'].sum().plot(title='Tong doanh thu theo tuan', marker='o')
     plt.savefig('b1_revenue_weekly.png')
     plt.close()
     
@@ -51,8 +51,8 @@ def bai2_webtraffic():
     df['datetime'] = pd.to_datetime(df['datetime'])
     df.set_index('datetime', inplace=True)
     
-    df = df.resample('H').mean(numeric_only=True)
-    df['visits'] = df['visits'].interpolate(method='linear')
+    df = df.resample('h').mean(numeric_only=True)
+    df['visits'] = df['visits'].interpolate(method='linear').bfill().ffill()
     
     df['hour'] = df.index.hour
     df['day_of_week'] = df.index.dayofweek
@@ -78,7 +78,7 @@ def bai3_stock():
     df.set_index('date', inplace=True)
     
     df = df.asfreq('B')
-    df['close_price'] = df['close_price'].ffill()
+    df['close_price'] = df['close_price'].ffill().bfill()
     
     plt.figure(figsize=(12, 5))
     df['close_price'].plot(label='Close Price', alpha=0.5)
@@ -103,7 +103,7 @@ def bai4_production():
     df['week_start'] = pd.to_datetime(df['week_start'])
     df.set_index('week_start', inplace=True)
     
-    df['production'] = df['production'].interpolate(method='linear')
+    df['production'] = df['production'].interpolate(method='linear').bfill().ffill()
     
     df['week'] = df.index.isocalendar().week
     df['quarter'] = df.index.quarter
